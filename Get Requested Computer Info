@@ -1,3 +1,5 @@
+//Get Requested for Computer Info
+
 function onChange(control, oldValue, newValue, isLoading) {
     if (isLoading) {
         return;
@@ -22,4 +24,82 @@ function onChange(control, oldValue, newValue, isLoading) {
         g_form.setValue('computer_asset', info);
     }
 	
+}
+
+//Populate Computer Type OnChg 
+
+function onChange(control, oldValue, newValue, isLoading) {
+    if (isLoading || newValue == '') {
+        g_form.setValue('computer_type_std', '-- None --');
+        return;
+    }
+
+    var networkadd = g_form.getValue('network');
+	var compCategory = g_form.getValue('computer_category_std');
+    g_form.setValue('computer_type_std', '-- None --');
+    var ga = new GlideAjax('GetLookupCategoryType');
+    ga.addParam('sysparm_name', 'getComputerType');
+	ga.addParam('sysparm_lookup2', compCategory);
+    ga.addParam('sysparm_netwrkAdd', networkadd);
+    ga.getXML(lookup3);
+
+    function lookup3(response) {
+        var ans = response.responseXML.documentElement.getAttribute('answer');
+        var lookup3Val = JSON.parse(ans);
+        g_form.clearOptions('computer_type_std');
+        g_form.addOption('computer_type_std', '', '-- None --');
+        for (var i = 0; i < lookup3Val.length; i++) {
+            g_form.addOption('computer_type_std', lookup3Val[i], lookup3Val[i]);
+        }
+    }
+}
+
+//Populate Computer Category onChng
+
+function onChange(control, oldValue, newValue, isLoading) {
+    if (isLoading || newValue == '') {
+        g_form.setValue('computer_category_std', '-- None --');
+        return;
+    }
+
+    var networkadd = g_form.getValue('network');
+	g_form.setValue('computer_category_std', '-- None --');
+    var ga = new GlideAjax('GetLookupCategoryType');
+    ga.addParam('sysparm_name', 'getComputerCategory');
+    ga.addParam('sysparm_netwrkAdd', networkadd);
+    ga.getXML(lookup2);
+
+    function lookup2(response) {
+        var ans = response.responseXML.documentElement.getAttribute('answer');
+        var lookup2Val = JSON.parse(ans);
+        g_form.clearOptions('computer_category_std');
+        g_form.addOption('computer_category_std', '', '-- None --');
+        for (var i = 0; i < lookup2Val.length; i++) {
+            g_form.addOption('computer_category_std', lookup2Val[i], lookup2Val[i]);
+        }
+    }
+}
+
+//Populate Computer Category OnLoad
+
+function onLoad() {
+
+	g_form.clearOptions('computer_type_std');
+    g_form.setValue('computer_category_std', '-- None --');
+    g_form.setValue('computer_type_std', '-- None --');
+    var networkadd = g_form.getValue('network');
+    var ga = new GlideAjax('GetLookupCategoryType');
+    ga.addParam('sysparm_name', 'getComputerCategory');
+    ga.addParam('sysparm_netwrkAdd', networkadd);
+    ga.getXML(lookup2);
+
+    function lookup2(response) {
+        var ans = response.responseXML.documentElement.getAttribute('answer');
+        var lookup2Val = JSON.parse(ans);
+        g_form.clearOptions('computer_category_std');
+        g_form.addOption('computer_category_std', '', '-- None --');
+        for (var i = 0; i < lookup2Val.length; i++) {
+            g_form.addOption('computer_category_std', lookup2Val[i], lookup2Val[i]);
+        }
+    }
 }
