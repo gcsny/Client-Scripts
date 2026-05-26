@@ -1,0 +1,25 @@
+function onChange(control, oldValue, newValue, isLoading) {
+    if (isLoading) {
+        return;
+    }
+
+    if (newValue == '') {
+        g_form.clearValue('computer_asset');
+        g_form.clearValue('computer_asset_number');
+        return;
+    } else {
+        g_form.clearValue('computer_asset');
+        g_form.clearValue('computer_asset_number');
+        var ga = new GlideAjax('GetUserComputerInfo');
+        ga.addParam('sysparm_name', 'getComputerRecords');
+        ga.addParam('sysparm_request', newValue);
+        ga.addParam();
+        ga.getXML(getInfo);
+    }
+
+    function getInfo(response) {
+        var info = response.responseXML.documentElement.getAttribute('answer');
+        g_form.setValue('computer_asset', info);
+    }
+	
+}
