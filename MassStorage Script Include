@@ -1,0 +1,57 @@
+var MassStorageDeviceUtils = Class.create();
+MassStorageDeviceUtils.prototype = Object.extendsObject(AbstractAjaxProcessor, {
+
+    getMSDRecords: function() {
+        var info = [];
+        var targetUser = this.getParameter('sysparm_user');
+
+        if (!targetUser) {
+            return "No user provided.";
+        }
+
+        var grMSD = new GlideRecord('cmdb_ci_msd');
+        grMSD.addQuery('assigned_to', targetUser);
+        grMSD.query();
+
+        while (grMSD.next()) {
+            // Build an individual block of text for each found asset
+            var details = 'Name : ' + grMSD.getValue('name') + ',\n' +
+                'Asset Tag : ' + grMSD.getValue('asset_tag') + ',\n' +
+                'Manufacturer : ' + grMSD.getDisplayValue('manufacturer') + ',\n' +
+                'Serial number : ' + grMSD.getValue('serial_number') + ',\n' +
+                'Install Status : ' + grMSD.getDisplayValue('install_status') + ',\n' + // Uses label instead of choice number
+                'CI Location : ' + grMSD.getDisplayValue('location') + ',\n' +
+                'Department : ' + grMSD.getDisplayValue('department') + '\n';
+
+            info.push(details);
+        }
+
+        // Join all asset summaries with a double new-line separator
+        return info.join('\n-------------------------\n');
+    },
+
+
+    getDeviceInformation: function() {
+        var deviceName = this.getParameter('sysparm_deviceasset');
+
+        var result = {
+            manufacturer: '',
+            serialNumber: ''
+        };
+
+        var gr = new GlideRecord('cmdb_ci_msd');
+        gr.addQuery('name', deviceName);
+        gr.query();
+
+        if (gr.next()) {
+            result.manufacturer = gr.getDisplayValue('manufacturer');
+            result.serialNumber = gr.getValue('serial_number') || '';
+        }
+
+        return JSON.stringify(result);
+    },
+
+
+
+    type: 'MassStorageDeviceUtils',
+});
