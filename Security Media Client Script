@@ -1,0 +1,34 @@
+function onChange(control, oldValue, newValue, isLoading) {
+    // Keep field read-only immediately on load or change
+    g_form.setReadOnly('information_device_asset_requested_for', true);
+
+    if (isLoading) {
+        return;
+    }
+
+    // Clear the field if the new value is empty
+    if (newValue === '') {
+        g_form.clearValue('information_device_asset_requested_for');
+        return;
+    }
+
+    var gr = g_form.getValue('requested_for');
+
+    // Proceed if both fields are populated
+    if (gr !== '') {
+        var ga = new GlideAjax('MassStorageDeviceUtils');
+        ga.addParam('sysparm_name', 'getMSDRecords');
+        ga.addParam('sysparm_user', newValue);
+        ga.addParam('sysparm_request', gr);
+
+        ga.getXMLAnswer(function(answer) {
+            if (answer) {
+                g_form.setValue('information_device_asset_requested_for', answer);
+            } else {
+                g_form.clearValue('information_device_asset_requested_for');
+            }
+            // Re-enforce read-only after setting the value
+            g_form.setReadOnly('information_device_asset_requested_for', true);
+        });
+    }
+}
