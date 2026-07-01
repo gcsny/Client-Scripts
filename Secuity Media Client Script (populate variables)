@@ -1,59 +1,47 @@
-var MassStorageDeviceUtils = Class.create();
-MassStorageDeviceUtils.prototype = Object.extendsObject(AbstractAjaxProcessor, {
-
-    getMSDRecords: function() {
-        var info = [];
-        var targetUser = this.getParameter('sysparm_user');
-
-        if (!targetUser) {
-            return "No user provided.";
+function onChange(control, oldValue, newValue, isLoading) {
+    if (isLoading) {
+        return;
+    }
+    // Handle empty field state immediately and exit
+    if (newValue === '') {
+        g_form.clearValue('manufacturer');
+        g_form.clearValue('serial_number_device');
+        g_form.clearValue('device_type');
+        g_form.clearValue('capacity');
+        g_form.setReadOnly('manufacturer', false);
+        g_form.setReadOnly('serial_number_device', false);
+        g_form.setReadOnly('device_type', false);
+        g_form.setReadOnly('capacity', false);
+        return; 
+    }
+    var ga = new GlideAjax('MassStorageDeviceUtils');
+    ga.addParam('sysparm_name', 'getDeviceInformation');
+    ga.addParam('sysparm_deviceasset', newValue);
+    
+    ga.getXMLAnswer(function(response) {
+        if (response) {
+            try {
+                var deviceData = JSON.parse(response);
+                // Set client fields from the database result
+                g_form.setValue('manufacturer', deviceData.manufacturer);
+                g_form.setValue('serial_number_device', deviceData.serialNumber);
+                g_form.setValue('device_type', deviceData.deviceType);
+                g_form.setValue('capacity', deviceData.capacity);
+                // Lock fields down
+                g_form.setReadOnly('manufacturer', true);
+                g_form.setReadOnly('serial_number_device', true);
+                g_form.setReadOnly('device_type', true);
+                g_form.setReadOnly('capacity', true);
+                
+            } catch (e) {
+                jslog('Error parsing device data JSON: ' + e);
+            }
+        } else {
+            // Unlock fields if no matching CI record was found
+            g_form.setReadOnly('manufacturer', false);
+            g_form.setReadOnly('serial_number_device', false);
+            g_form.setReadOnly('device_type', false);
+            g_form.setReadOnly('capacity', false);
         }
-
-        var grMSD = new GlideRecord('cmdb_ci_msd');
-        grMSD.addQuery('assigned_to', targetUser);
-        grMSD.query();
-
-        while (grMSD.next()) {
-            // Build an individual block of text for each found asset
-            var details = 'Name : ' + grMSD.getValue('name') + ',\n' +
-                'Asset Tag : ' + grMSD.getValue('asset_tag') + ',\n' +
-                'Manufacturer : ' + grMSD.getDisplayValue('manufacturer') + ',\n' +
-                'Serial number : ' + grMSD.getValue('serial_number') + ',\n' +
-                'Install Status : ' + grMSD.getDisplayValue('install_status') + ',\n' + // Uses label instead of choice number
-                'CI Location : ' + grMSD.getDisplayValue('location') + ',\n' +
-                'Department : ' + grMSD.getDisplayValue('department') + '\n';
-
-            info.push(details);
-        }
-
-        // Join all asset summaries with a double new-line separator
-        return info.join('\n-------------------------\n');
-    },
-
-
-    getDeviceInformation: function() {
-        var deviceName = this.getParameter('sysparm_deviceasset');
-
-        var result = {
-            manufacturer: '',
-            serialNumber: '',
-			device_type: ''
-        };
-
-        var gr = new GlideRecord('cmdb_ci_msd');
-        gr.addQuery('name', deviceName);
-        gr.query();
-
-        if (gr.next()) {
-            result.manufacturer = gr.getDisplayValue('manufacturer');
-            result.serialNumber = gr.getValue('serial_number') || '';
-			result.deviceType = gr.getDisplayValue ('device_type') || '';
-        }
-
-        return JSON.stringify(result);
-    },
-
-
-
-    type: 'MassStorageDeviceUtils',
-});
+    });
+}
