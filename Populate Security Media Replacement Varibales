@@ -5,8 +5,6 @@ function onChange(control, oldValue, newValue, isLoading) {
     if (newValue === '') {
         g_form.clearValue('replacement_device');
         g_form.clearValue('location_security_media');
-        g_form.setReadOnly('replacement_device', false);
-        g_form.setReadOnly('location_security_media', false);
         return;
     }
     var ga = new GlideAjax('MassStorageDeviceUtils');
@@ -20,18 +18,10 @@ function onChange(control, oldValue, newValue, isLoading) {
                 // Build replacement device string with device type and capacity comma separated
                 var replacementValue = deviceData.deviceType + ', ' + deviceData.capacity;
                 g_form.setValue('replacement_device', replacementValue);
-                g_form.setReadOnly('replacement_device', replacementValue !== ', ');
-
                 g_form.setValue('location_security_media', deviceData.location);
-                g_form.setReadOnly('location_security_media', deviceData.location !== '');
-
             } catch (e) {
                 jslog('Error parsing device data JSON: ' + e);
             }
-        } else {
-            // Unlock fields if no matching CI record was found
-            g_form.setReadOnly('replacement_device', false);
-            g_form.setReadOnly('location_security_media', false);
         }
     });
 }
