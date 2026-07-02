@@ -8,10 +8,12 @@ function onChange(control, oldValue, newValue, isLoading) {
         g_form.clearValue('serial_number_device');
         g_form.clearValue('device_type');
         g_form.clearValue('capacity');
+        g_form.clearValue('location_security_media');
         g_form.setReadOnly('manufacturer', false);
         g_form.setReadOnly('serial_number_device', false);
         g_form.setReadOnly('device_type', false);
         g_form.setReadOnly('capacity', false);
+        g_form.setReadOnly('location_security_media', false);
         return; 
     }
     var ga = new GlideAjax('MassStorageDeviceUtils');
@@ -34,6 +36,9 @@ function onChange(control, oldValue, newValue, isLoading) {
 
                 g_form.setValue('capacity', deviceData.capacity);
                 g_form.setReadOnly('capacity', deviceData.capacity !== '');
+
+                g_form.setValue('location_security_media', deviceData.location);
+                g_form.setReadOnly('location_security_media', deviceData.location !== '');
                 
             } catch (e) {
                 jslog('Error parsing device data JSON: ' + e);
@@ -44,6 +49,7 @@ function onChange(control, oldValue, newValue, isLoading) {
             g_form.setReadOnly('serial_number_device', false);
             g_form.setReadOnly('device_type', false);
             g_form.setReadOnly('capacity', false);
+            g_form.setReadOnly('location_security_media', false);
         }
     });
 }
