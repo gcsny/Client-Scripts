@@ -24,14 +24,16 @@ function onChange(control, oldValue, newValue, isLoading) {
                 var deviceData = JSON.parse(response);
                 // Set client fields from the database result
                 g_form.setValue('manufacturer', deviceData.manufacturer);
+                g_form.setReadOnly('manufacturer', deviceData.manufacturer !== '');
+
                 g_form.setValue('serial_number_device', deviceData.serialNumber);
+                g_form.setReadOnly('serial_number_device', deviceData.serialNumber !== '');
+
                 g_form.setValue('device_type', deviceData.deviceType);
+                g_form.setReadOnly('device_type', deviceData.deviceType !== '');
+
                 g_form.setValue('capacity', deviceData.capacity);
-                // Lock fields down
-                g_form.setReadOnly('manufacturer', true);
-                g_form.setReadOnly('serial_number_device', true);
-                g_form.setReadOnly('device_type', true);
-                g_form.setReadOnly('capacity', true);
+                g_form.setReadOnly('capacity', deviceData.capacity !== '');
                 
             } catch (e) {
                 jslog('Error parsing device data JSON: ' + e);
