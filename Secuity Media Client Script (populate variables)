@@ -24,7 +24,7 @@ function onChange(control, oldValue, newValue, isLoading) {
                 g_form.setValue('serial_number_device', deviceData.serialNumber);
                 g_form.setValue('device_type', deviceData.deviceType);
                 g_form.setValue('capacity', deviceData.capacity);
-                g_form.setValue('location_security_media', deviceData.location);
+                g_form.setValue('location_security_media', deviceData.location, deviceData.locationDisplay);
             } catch (e) {
                 jslog('Error parsing device data JSON: ' + e);
             }
