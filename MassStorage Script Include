@@ -29,7 +29,9 @@ MassStorageDeviceUtils.prototype = Object.extendsObject(AbstractAjaxProcessor, {
             manufacturer: '',
             serialNumber: '',
             deviceType: '',
-            capacity: ''
+            capacity: '',
+            location: '',
+            locationDisplay: ''
         };
         var gr = new GlideRecord('cmdb_ci_msd');
         gr.addQuery('name', deviceName);
@@ -39,6 +41,8 @@ MassStorageDeviceUtils.prototype = Object.extendsObject(AbstractAjaxProcessor, {
             result.serialNumber = gr.getValue('serial_number') || '';
             result.deviceType = gr.getDisplayValue('device_type') || '';
             result.capacity = gr.getValue('capacity') || '';
+            result.location = gr.getValue('location') || '';
+            result.locationDisplay = gr.getDisplayValue('location') || '';
         }
         return JSON.stringify(result);
     },
