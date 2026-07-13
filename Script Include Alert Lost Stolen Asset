@@ -1,5 +1,7 @@
 Lost/Stolen - Deliver peripheral to user and update Asset Capture
 
+2c -Lost/Stolen - Deliver Peripheral to site and populate asset tag information
+
 
 function onChange(control, oldValue, newValue, isLoading, isTemplate) {
     if (isLoading || newValue === '') {
