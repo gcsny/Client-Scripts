@@ -32,3 +32,11 @@ function onChange(control, oldValue, newValue, isLoading) {
         });
     }
 }
+
+
+
+function onLoad() {
+   //Type appropriate comment here, and begin script below
+   g_form.setVisible('device_asset_tag', false);
+   gform.setVisible('lost_device_serial_number', false);
+}
