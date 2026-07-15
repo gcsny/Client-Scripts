@@ -9,8 +9,14 @@ if (task.next()) {
 
 
 var task = new GlideRecord('sc_task');
-task.addQuery('request_item', 'paste_the_same_RITM_sys_id_here');
+task.addQuery('request_item', 'cfb508de488ec310643b228eb50cb818');
 task.query();
 while (task.next()) {
     gs.info('Number: ' + task.number + ' | Short Description: [' + task.short_description + ']');
 }
+
+
+*** Script: Number: SCTASK1355792 | Short Description: [Lost/Stolen - SentinalOne remove removable media rule]
+*** Script: Number: SCTASK1355793 | Short Description: [Lost/Stolen - Deliver Peripheral to site and populate asset tag information]
+*** Script: Number: SCTASK1355794 | Short Description: [Lost/Stolen - Provision USB]
+*** Script: Number: SCTASK1355795 | Short Description: [Lost/Stolen - Enable USB Policy]
