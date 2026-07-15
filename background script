@@ -37,3 +37,5 @@ function onLoad() {
     g_form.setReadOnly('replacement_device_asset_tag', !editable);
     g_form.setReadOnly('replacement_device_serial_number', !editable);
 }
+
+Lost/Stolen - Deliver Peripheral to site and populate asset tag information
