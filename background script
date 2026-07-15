@@ -6,3 +6,11 @@ gs.info('Found: ' + task.getRowCount());
 if (task.next()) {
     gs.info('Task found: ' + task.number);
 }
+
+
+var task = new GlideRecord('sc_task');
+task.addQuery('request_item', 'paste_the_same_RITM_sys_id_here');
+task.query();
+while (task.next()) {
+    gs.info('Number: ' + task.number + ' | Short Description: [' + task.short_description + ']');
+}
