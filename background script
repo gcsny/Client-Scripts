@@ -23,3 +23,10 @@ while (task.next()) {
 *** Script: Number: SCTASK1355793 | Short Description: [Lost/Stolen - Deliver Peripheral to site and populate asset tag information]
 *** Script: Number: SCTASK1355794 | Short Description: [Lost/Stolen - Provision USB]
 *** Script: Number: SCTASK1355795 | Short Description: [Lost/Stolen - Enable USB Policy]
+
+
+function onLoad() {
+    var editable = (g_form.getValue('short_description') == 'Lost/Stolen - Deliver Peripheral to site and populate asset tag information');
+    g_form.setReadOnly('device_asset_tag', !editable);
+    g_form.setReadOnly('lost_device_serial_number', !editable);
+}
