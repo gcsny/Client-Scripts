@@ -1,11 +1,14 @@
 var task = new GlideRecord('sc_task');
-task.addQuery('request_item', 'the_correct_RITM_sys_id');
+task.addQuery('request_item', 'cfb508de488ec310643b228eb50cb818');
 task.addQuery('short_description', 'Lost/Stolen - Deliver Peripheral to site and populate asset tag information');
 task.query();
 gs.info('Found: ' + task.getRowCount());
 if (task.next()) {
     gs.info('Task found: ' + task.number);
 }
+
+Script: Found: 1
+*** Script: Task found: SCTASK1355793
 
 
 var task = new GlideRecord('sc_task');
