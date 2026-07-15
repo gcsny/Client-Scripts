@@ -118,6 +118,7 @@ function onLoad() {
 //this must match the Short Description on the '2c' Create Task activity exactly
 function onLoad() {
     var editable = (g_form.getValue('short_description') == 'Lost/Stolen - Deliver Peripheral to site and populate asset tag information');
+    alert('editable = ' + editable + ' | short_description = ' + g_form.getValue('short_description'));
     g_form.setReadOnly('replacement_device_asset_tag', !editable);
     g_form.setReadOnly('replacement_device_serial_number', !editable);
 }
