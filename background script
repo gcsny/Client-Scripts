@@ -39,3 +39,78 @@ function onLoad() {
 }
 
 Lost/Stolen - Deliver Peripheral to site and populate asset tag information
+
+
+Lost/Stolen - Deliver Peripheral to site and populate asset tag information
+
+function onLoad() {
+   //Type appropriate comment here, and begin script below
+	var domain = g_form.getValue('sys_domain');
+//	g_form.addInfoMessage(domain);
+	var ugrp = new GlideRecord('sys_user_grmember');
+	var grp = '';
+	var flag ='false';
+	ugrp.addQuery('user',g_user.userID);
+	ugrp.query();
+	while(ugrp.next())
+		{
+			if(ugrp.getValue('group')==g_form.getValue('assignment_group'))
+				{
+					flag = 'true';//User is part of this group
+					break;
+				}
+		}
+	if((flag=='true')&&(g_form.getValue('assigned_to')==g_user.userID))//user is part of group and assignee
+		{
+			g_form.setReadOnly('state',false);
+			g_form.setReadOnly('cmdb_ci',false);
+			g_form.setReadOnly('assignment_group',false);
+			g_form.setReadOnly('short_description',false);
+			g_form.setReadOnly('description',false);
+			//g_form.setReadOnly('work_notes',false);
+			g_form.setReadOnly('comments',false);
+			
+		}
+	else if(flag=='true')//User is part of group
+		{
+			g_form.setReadOnly('state',true);
+			g_form.setReadOnly('cmdb_ci',true);
+			g_form.setReadOnly('assignment_group',true);
+			g_form.setReadOnly('short_description',true);
+			g_form.setReadOnly('description',true);
+			//g_form.setReadOnly('work_notes',true);
+			g_form.setReadOnly('comments',true);
+		}
+	else//user is not part of assigned group
+		{
+			g_form.setReadOnly('state',true);
+			g_form.setReadOnly('cmdb_ci',true);
+			g_form.setReadOnly('assignment_group',true);
+			g_form.setReadOnly('short_description',true);
+			g_form.setReadOnly('description',true);
+		//	g_form.setReadOnly('work_notes',true);
+			g_form.setReadOnly('comments',true);
+			g_form.setReadOnly('assigned_to',true);
+		}
+	if(g_form.getValue('state')==3 || g_form.getValue('state')==4)
+		{
+			/*var fields = g_form.getEditableFields();
+			for (var i = 0; i < fields.length; i++)
+			{ 
+                g_form.setReadOnly(fields[i], true); 
+			}*/
+			g_form.setMandatory('assigned_to', false);
+			g_form.setReadOnly('state',true);
+			g_form.setReadOnly('cmdb_ci',true);
+			g_form.setReadOnly('assignment_group',true);
+			g_form.setReadOnly('short_description',true);
+			g_form.setReadOnly('description',true);
+			g_form.setReadOnly('work_notes',true);
+			g_form.setReadOnly('comments',true);
+			g_form.setReadOnly('assigned_to',true);
+			g_form.setReadOnly('work_start',true);
+			g_form.setReadOnly('work_end',true);
+			g_form.setReadOnly('u_sctask_actualhours',true);
+		}
+   
+}
