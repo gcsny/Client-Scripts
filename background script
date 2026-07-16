@@ -122,3 +122,30 @@ function onLoad() {
     g_form.setReadOnly('replacement_device_asset_tag', !editable);
     g_form.setReadOnly('replacement_device_serial_number', !editable);
 }
+
+
+function onChange(control, oldValue, newValue, isLoading, isTemplate) {
+    if (isLoading || newValue === '') {
+        return;
+    }
+    // applies to task closure only
+    if (newValue != 3) return;
+    if (oldValue == 3) return;
+
+    // if task is Lost/Stolen - Deliver peripheral to user and update Asset Capture, then task closure allowed only if Asset Capture Detail record exists
+    if (g_form.getValue('short_description').toString().includes("Lost/Stolen - Deliver peripheral to user and update Asset Capture") && newValue == 3) {
+        var ga = new GlideAjax('getAssetCaptureDetailCount');
+        ga.addParam('sysparm_name', 'getRecordsCount');
+        ga.addParam('sysparm_parentid', g_form.getUniqueValue());
+        ga.getXML(getACDCnt);
+    } else return;
+
+    function getACDCnt(response) {
+        var rec_cnt = response.responseXML.documentElement.getAttribute('answer');
+        if (rec_cnt == 0) {
+            g_form.addErrorMessage("Asset Capture Details record not found. Cannot close task!");
+            g_form.setValue('state', oldValue);
+        }
+    }
+}
+}
