@@ -1,0 +1,15 @@
+function onChange(control, oldValue, newValue, isLoading) {
+    if (isLoading || newValue === '') {
+        return;
+    }
+
+    if (newValue === 'lost') {
+        // clear out the stolen specific variables
+        g_form.clearValue('stolen_variable_1');
+        g_form.clearValue('stolen_variable_2');
+    } else if (newValue === 'stolen') {
+        // clear out the lost specific variables
+        g_form.clearValue('lost_variable_1');
+        g_form.clearValue('lost_variable_2');
+    }
+}
