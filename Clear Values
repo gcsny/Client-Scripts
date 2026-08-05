@@ -13,3 +13,24 @@ function onChange(control, oldValue, newValue, isLoading) {
         g_form.clearValue('lost_variable_2');
     }
 }
+
+
+function onChange(control, oldValue, newValue, isLoading) {
+    if (isLoading || newValue === '') {
+        return;
+    }
+
+    if (newValue === 'lost') {
+        // clear out the stolen specific variables
+        g_form.clearValue('computer_category_stolen');
+        g_form.clearValue('computer_type_stolen');
+		g_form.clearValue('security_media_category_stolen');
+		g_form.clearValue('type_of_asset_stolen');
+    } else if (newValue === 'stolen') {
+        // clear out the lost specific variables
+        g_form.clearValue('computer_category_lost');
+        g_form.clearValue('computer_type_lost');
+		g_form.clearValue('security_media_category_lost');
+		g_form.clearValue('type_of_asset_lost');
+    }
+}
