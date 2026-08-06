@@ -1,0 +1,236 @@
+Catalog Client Script - Current:
+
+function onLoad() {
+
+    // Configuration rules: which groups can unlock each variable set
+    var config = [
+
+        //EB IT Network L3 - Application Server variable set
+        {
+            group: "e64b6920e422f610d06cfadc3f7ecbd3",
+            keyword: "Provide IP addresses for application server(s)",
+            set: "application_server_details_virtual_server_provisioning"
+        },
+
+        //EB IT Network Engineering - Application Server variable set
+        {
+            group: "78ce663a715d71509646957b274c67ab",
+            keyword: "Provide IP addresses for application server(s)",
+            set: "application_server_details_virtual_server_provisioning"
+        },
+
+        //EB IT Network L3 - Database Server variable set
+        {
+            group: "e64b6920e422f610d06cfadc3f7ecbd3",
+            keyword: "Provide IP addresses for database server(s)",
+            set: "db_server_details_virtual_server_provisioning"
+        },
+
+        //EB IT Network Engineering - Database Server variable set
+        {
+            group: "78ce663a715d71509646957b274c67ab",
+            keyword: "Provide IP addresses for database server(s)",
+            set: "db_server_details_virtual_server_provisioning"
+        },
+
+        //Unisys-Windows Projects - Windows App Server Names
+        {
+            group: "e63d5e85b1611110964668d72675c6f8",
+            keyword: "Provide Server Names for Windows Application Server(s)",
+            set: "application_server_details_virtual_server_provisioning"
+        },
+
+        //Unisys-Linux Projects - Linux App Server Names
+        {
+            group: "ee52a2c9b1611110964668d72675c6eb",
+            keyword: "Provide Server Names for Linux Application Server(s)",
+            set: "application_server_details_virtual_server_provisioning"
+        },
+
+        //Unisys-Windows Projects - Windows DB Server Names
+        {
+            group: "e63d5e85b1611110964668d72675c6f8",
+            keyword: "Provide Server Names for Windows Database Server(s)",
+            set: "db_server_details_virtual_server_provisioning"
+        },
+
+        //Unisys-Linux Projects - Linux DB Server Names
+        {
+            group: "ee52a2c9b1611110964668d72675c6eb",
+            keyword: "Provide Server Names for Linux Database Server(s)",
+            set: "db_server_details_virtual_server_provisioning"
+        }
+    ];
+
+    // Apply rules
+    config.forEach(function(item) {
+
+        var assignmentGroup = g_form.getValue('assignment_group');
+        var shortDesc = g_form.getValue('short_description').toString();
+        var state = g_form.getValue('state');
+
+        if (assignmentGroup === item.group &&
+            shortDesc.includes(item.keyword) &&
+            (state == 1 || state == 2)) {  // Open or Work in Progress
+
+            var ga = new GlideAjax('checkIfGroupMember');
+            ga.addParam('sysparm_name', 'isGroupMember');
+            ga.addParam('sysparm_userid', g_user.userID);
+            ga.addParam('sysparm_groupid', item.group);
+
+            ga.getXMLAnswer(function(answer) {
+                if (answer === 'true') {
+                    // Unlock ONLY the variable set (pencil icon appears)
+                    g_form.setReadOnly(item.set, false);
+                }
+            });
+        }
+    });
+}
+
+Catalog Client Scriot - Original before i worked it:
+
+function onLoad() {
+
+	//EB IT Network L3 - Provide IP addresses for application server(s)
+    if (g_form.getValue('assignment_group') == "e64b6920e422f610d06cfadc3f7ecbd3" && g_form.getValue('short_description').toString().includes("Provide IP addresses for application server(s)") && g_form.getValue('state') != 3 && g_form.getValue('state') != 4 && g_form.getValue('state') != 7) {
+        var ga = new GlideAjax('checkIfGroupMember');
+        ga.addParam('sysparm_name', 'isGroupMember');
+        ga.addParam('sysparm_userid', g_user.userID);
+        ga.addParam('sysparm_groupid', "e64b6920e422f610d06cfadc3f7ecbd3");
+        ga.getXMLAnswer(function(answer) {
+            if (answer == 'true') {
+                g_form.setReadOnly('application_server_details_virtual_server_provisioning', false);
+            }
+        });
+    }
+
+    //EB IT Network L3- Provide IP addresses for database server(s)
+	if (g_form.getValue('assignment_group') == "e64b6920e422f610d06cfadc3f7ecbd3" && g_form.getValue('short_description').toString().includes("Provide IP addresses for database server(s)") && g_form.getValue('state') != 3 && g_form.getValue('state') != 4 && g_form.getValue('state') != 7) {
+        var ga = new GlideAjax('checkIfGroupMember');
+        ga.addParam('sysparm_name', 'isGroupMember');
+        ga.addParam('sysparm_userid', g_user.userID);
+        ga.addParam('sysparm_groupid', "e64b6920e422f610d06cfadc3f7ecbd3");
+        ga.getXMLAnswer(function(answer) {
+            if (answer == 'true') {
+                g_form.setReadOnly('db_server_details_virtual_server_provisioning', false);
+            }
+        });
+    }
+
+	//Unisys-Windows_Projects_EB - Provide Server Names for Windows Application Server(s)
+    if (g_form.getValue('assignment_group') == "e63d5e85b1611110964668d72675c6f8" && g_form.getValue('short_description').toString().includes("Provide Server Names for Windows Application Server(s)") && g_form.getValue('state') != 3 && g_form.getValue('state') != 4 && g_form.getValue('state') != 7) {
+        var ga = new GlideAjax('checkIfGroupMember');
+        ga.addParam('sysparm_name', 'isGroupMember');
+        ga.addParam('sysparm_userid', g_user.userID);
+        ga.addParam('sysparm_groupid', "e63d5e85b1611110964668d72675c6f8");
+        ga.getXMLAnswer(function(answer) {
+            if (answer == 'true') {
+                g_form.setReadOnly('application_server_details_virtual_server_provisioning', false);
+            }
+        });
+    }
+
+    //Unisys-Linux_Projects_EB - Provide Server Names for Linux Application Server(s)
+	if (g_form.getValue('assignment_group') == "ee52a2c9b1611110964668d72675c6eb" && g_form.getValue('short_description').toString().includes("Provide Server Names for Linux Application Server(s)") && g_form.getValue('state') != 3 && g_form.getValue('state') != 4 && g_form.getValue('state') != 7) {
+        var ga = new GlideAjax('checkIfGroupMember');
+        ga.addParam('sysparm_name', 'isGroupMember');
+        ga.addParam('sysparm_userid', g_user.userID);
+        ga.addParam('sysparm_groupid', "ee52a2c9b1611110964668d72675c6eb");
+        ga.getXMLAnswer(function(answer) {
+            if (answer == 'true') {
+                g_form.setReadOnly('application_server_details_virtual_server_provisioning', false);
+            }
+        });
+    }
+
+	//Unisys-Windows_Projects_EB - Provide Server Names for Windows Database Server(s)
+	if (g_form.getValue('assignment_group') == "e63d5e85b1611110964668d72675c6f8" && g_form.getValue('short_description').toString().includes("Provide Server Names for Windows Database Server(s)") && g_form.getValue('state') != 3 && g_form.getValue('state') != 4 && g_form.getValue('state') != 7) {
+        var ga = new GlideAjax('checkIfGroupMember');
+        ga.addParam('sysparm_name', 'isGroupMember');
+        ga.addParam('sysparm_userid', g_user.userID);
+        ga.addParam('sysparm_groupid', "e63d5e85b1611110964668d72675c6f8");
+        ga.getXMLAnswer(function(answer) {
+            if (answer == 'true') {
+                g_form.setReadOnly('db_server_details_virtual_server_provisioning', false);
+            }
+        });
+    }
+
+    //Unisys-Linux_Projects_EB - Provide Server Names for Linux Database Server(s)
+	if (g_form.getValue('assignment_group') == "ee52a2c9b1611110964668d72675c6eb" && g_form.getValue('short_description').toString().includes("Provide Server Names for Linux Database Server(s)") && g_form.getValue('state') != 3 && g_form.getValue('state') != 4 && g_form.getValue('state') != 7) {
+        var ga = new GlideAjax('checkIfGroupMember');
+        ga.addParam('sysparm_name', 'isGroupMember');
+        ga.addParam('sysparm_userid', g_user.userID);
+        ga.addParam('sysparm_groupid', "ee52a2c9b1611110964668d72675c6eb");
+        ga.getXMLAnswer(function(answer) {
+            if (answer == 'true') {
+                g_form.setReadOnly('db_server_details_virtual_server_provisioning', false);
+            }
+        });
+    }
+
+}
+
+UI Polcity Unisys – Lock DB Server IP Addresses 
+
+Conditions : Assignment Group is Unisys-Windows_Projects_EB
+  Short Description is Provide Server Names for Windows Database Server(s)
+  State is Open or Work in Progress
+
+Script:
+
+function onCondition() {
+
+    // Check if user is actually a member of Unisys group
+    var ga = new GlideAjax('checkIfGroupMember');
+    ga.addParam('sysparm_name', 'isGroupMember');
+    ga.addParam('sysparm_userid', g_user.userID);
+    ga.addParam('sysparm_groupid', 'e63d5e85b1611110964668d72675c6f8');  // Unisys Windows Projects group
+
+    ga.getXMLAnswer(function(answer) {
+
+        if (answer === 'true') {
+
+            // Make variable set editable so pencil icon appears
+            g_form.setReadOnly('db_server_details_virtual_server_provisioning', false);
+
+            // Lock the DB IP field
+            g_form.setReadOnly('db_ip_addresses', true);
+
+            // Unlock the Host Name field
+            g_form.setReadOnly('db_host_name', false);
+        }
+    });
+}
+
+UI Policy - Unisys – Lock App Server IP Addresses 
+
+Conditions:  Assignemnt Group is Unisys-Windows_Projects_EB
+  Short Description is Provide Server Names for Windows Application Server(s)
+State is Open or Work in progress
+
+Script: function onCondition() {
+
+    // Check if user is actually a member of Unisys group
+    var ga = new GlideAjax('checkIfGroupMember');
+    ga.addParam('sysparm_name', 'isGroupMember');
+    ga.addParam('sysparm_userid', g_user.userID);
+    ga.addParam('sysparm_groupid', 'e63d5e85b1611110964668d72675c6f8');  // Unisys Windows Projects group
+
+    ga.getXMLAnswer(function(answer) {
+
+        if (answer === 'true') {
+
+            // Make variable set editable 
+            g_form.setReadOnly('application_server_details_virtual_server_provisioning', false);
+
+            // Lock IP address field
+            g_form.setReadOnly('app_ip_addresses', true);
+
+            // Unlock hostname field
+            g_form.setReadOnly('app_host_name', false);
+        }
+    });
+}
+
