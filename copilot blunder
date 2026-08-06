@@ -299,3 +299,108 @@ function onSubmit() {
 }
 }
 
+
+GOOD SCRIPT
+
+function onLoad() {
+
+    var config = [
+
+        // EB IT Network L3 - container unlock only, unchanged
+        {
+            group: "e64b6920e422f610d06cfadc3f7ecbd3",
+            keyword: "Provide IP addresses for application server(s)",
+            set: "application_server_details_virtual_server_provisioning"
+        },
+        {
+            group: "e64b6920e422f610d06cfadc3f7ecbd3",
+            keyword: "Provide IP addresses for database server(s)",
+            set: "db_server_details_virtual_server_provisioning"
+        },
+
+        // EB IT Network Engineering - IP editable, host name locked
+        {
+            group: "78ce663a715d71509646957b274c67ab",
+            keyword: "Provide IP addresses for application server(s)",
+            set: "application_server_details_virtual_server_provisioning",
+            ipField: "app_ip_addresses",
+            hostField: "app_host_name",
+            ipReadOnly: false,
+            hostReadOnly: true
+        },
+        {
+            group: "78ce663a715d71509646957b274c67ab",
+            keyword: "Provide IP addresses for database server(s)",
+            set: "db_server_details_virtual_server_provisioning",
+            ipField: "db_ip_addresses",
+            hostField: "db_host_name",
+            ipReadOnly: false,
+            hostReadOnly: true
+        },
+
+        // Unisys Windows Projects - host name editable, IP locked
+        {
+            group: "e63d5e85b1611110964668d72675c6f8",
+            keyword: "Provide Server Names for Windows Application Server(s)",
+            set: "application_server_details_virtual_server_provisioning",
+            ipField: "app_ip_addresses",
+            hostField: "app_host_name",
+            ipReadOnly: true,
+            hostReadOnly: false
+        },
+        {
+            group: "e63d5e85b1611110964668d72675c6f8",
+            keyword: "Provide Server Names for Windows Database Server(s)",
+            set: "db_server_details_virtual_server_provisioning",
+            ipField: "db_ip_addresses",
+            hostField: "db_host_name",
+            ipReadOnly: true,
+            hostReadOnly: false
+        },
+
+        // Unisys Linux Projects - container unlock only, unchanged
+        {
+            group: "ee52a2c9b1611110964668d72675c6eb",
+            keyword: "Provide Server Names for Linux Application Server(s)",
+            set: "application_server_details_virtual_server_provisioning"
+        },
+        {
+            group: "ee52a2c9b1611110964668d72675c6eb",
+            keyword: "Provide Server Names for Linux Database Server(s)",
+            set: "db_server_details_virtual_server_provisioning"
+        }
+    ];
+
+    config.forEach(function(item) {
+
+        var assignmentGroup = g_form.getValue('assignment_group');
+        var shortDesc = g_form.getValue('short_description').toString();
+        var state = g_form.getValue('state');
+
+        if (assignmentGroup === item.group &&
+            shortDesc.includes(item.keyword) &&
+            (state == 1 || state == 2)) {
+
+            var ga = new GlideAjax('checkIfGroupMember');
+            ga.addParam('sysparm_name', 'isGroupMember');
+            ga.addParam('sysparm_userid', g_user.userID);
+            ga.addParam('sysparm_groupid', item.group);
+
+            ga.getXMLAnswer(function(answer) {
+                if (answer === 'true') {
+
+                    // Unlock the container so the pencil icon appears
+                    g_form.setReadOnly(item.set, false);
+
+                    // If this rule defines field level control, apply it per row
+                    if (item.ipField && item.hostField) {
+                        g_form.getSections(item.set).forEach(function(row) {
+                            g_form.setReadOnly(item.ipField, item.ipReadOnly, row);
+                            g_form.setReadOnly(item.hostField, item.hostReadOnly, row);
+                        });
+                    }
+                }
+            });
+        }
+    });
+}
