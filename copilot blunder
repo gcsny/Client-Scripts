@@ -232,5 +232,70 @@ Script: function onCondition() {
             g_form.setReadOnly('app_host_name', false);
         }
     });
+
+Required Variables Catalog Client Script
+
+function onSubmit() {
+    //Type appropriate comment here, and begin script below
+    var shortDesc = g_form.getValue('short_description');
+    var vState = g_form.getValue('state');
+    if (vState == '3') {
+        if (shortDesc.includes('Provide IP addresses for database server(s)')) {
+            var dbMRVS = (g_form.getValue('db_server_details_virtual_server_provisioning').length != 0 ? JSON.parse(g_form.getValue('db_server_details_virtual_server_provisioning')) : []);
+            var numRows = dbMRVS.length;
+            for (var i = 0; i < numRows; i++) {
+                if (!dbMRVS[i].db_ip_addresses) {
+                    alert('Please populate all the IP Addresses before closing this task');
+                    return false;
+                }
+            }
+        } else if (shortDesc.includes('Provide IP addresses for application server(s)')) {
+            var appMRVS = (g_form.getValue('application_server_details_virtual_server_provisioning').length != 0 ? JSON.parse(g_form.getValue('application_server_details_virtual_server_provisioning')) : []);
+            var numRows = appMRVS.length;
+            for (var i = 0; i < numRows; i++) {
+                if (!appMRVS[i].app_ip_addresses) {
+                    alert('Please populate all the IP Addresses before closing this task');
+                    return false;
+                }
+            }
+        } else if (shortDesc.includes('Provide Server Names for Windows Database Server(s)')) {
+            var dbMRVS = (g_form.getValue('db_server_details_virtual_server_provisioning').length != 0 ? JSON.parse(g_form.getValue('db_server_details_virtual_server_provisioning')) : []);
+            var numRows = dbMRVS.length;
+            for (var i = 0; i < numRows; i++) {
+                if (!dbMRVS[i].db_host_name && dbMRVS[i].db_os_type == 'windows') {
+                    alert('Please populate all the Host Name(s) before closing this task');
+                    return false;
+                }
+            }
+        } else if (shortDesc.includes('Provide Server Names for Linux Database Server(s)')) {
+            var dbMRVS = (g_form.getValue('db_server_details_virtual_server_provisioning').length != 0 ? JSON.parse(g_form.getValue('db_server_details_virtual_server_provisioning')) : []);
+            var numRows = dbMRVS.length;
+            for (var i = 0; i < numRows; i++) {
+                if (!dbMRVS[i].db_host_name && dbMRVS[i].db_os_type == 'linux') {
+                    alert('Please populate all the Host Name(s) before closing this task');
+                    return false;
+                }
+            }
+        } else if (shortDesc.includes('Provide Server Names for Windows Application Server(s)')) {
+            var appMRVS = (g_form.getValue('application_server_details_virtual_server_provisioning').length != 0 ? JSON.parse(g_form.getValue('application_server_details_virtual_server_provisioning')) : []);
+            var numRows = appMRVS.length;
+            for (var i = 0; i < numRows; i++) {
+                if (!appMRVS[i].app_host_name && appMRVS[i].os_type == 'windows') {
+                    alert('Please populate all the Host Name(s) before closing this task');
+                    return false;
+                }
+            }
+        } else if (shortDesc.includes('Provide Server Names for Linux Application Server(s)')) {
+            var appMRVS = (g_form.getValue('application_server_details_virtual_server_provisioning').length != 0 ? JSON.parse(g_form.getValue('application_server_details_virtual_server_provisioning')) : []);
+            var numRows = appMRVS.length;
+            for (var i = 0; i < numRows; i++) {
+                if (!appMRVS[i].app_host_name && appMRVS[i].os_type == 'linux') {
+                    alert('Please populate all the Host Name(s) before closing this task');
+                    return false;
+                }
+            }
+        }
+    }
+}
 }
 
