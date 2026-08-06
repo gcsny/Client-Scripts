@@ -430,3 +430,96 @@ function onLoad() {
         });
     }
 }
+
+
+App Server Fuekd Lock
+
+function onLoad() {
+
+    var assignmentGroup = parent.g_form.getValue('assignment_group');
+    var shortDesc = parent.g_form.getValue('short_description').toString();
+
+    var config = [
+        {
+            group: "e63d5e85b1611110964668d72675c6f8", // Unisys Windows
+            keyword: "Provide Server Names for Windows Application Server(s)",
+            ipReadOnly: true,
+            hostReadOnly: false
+        },
+        {
+            group: "ee52a2c9b1611110964668d72675c6eb", // Unisys Linux
+            keyword: "Provide Server Names for Linux Application Server(s)",
+            ipReadOnly: true,
+            hostReadOnly: false
+        },
+        {
+            group: "78ce663a715d71509646957b274c67ab", // EB IT Engineering
+            keyword: "Provide IP addresses for application server(s)",
+            ipReadOnly: false,
+            hostReadOnly: true
+        }
+    ];
+
+    config.forEach(function(item) {
+        if (assignmentGroup === item.group && shortDesc.includes(item.keyword)) {
+
+            var ga = new GlideAjax('checkIfGroupMember');
+            ga.addParam('sysparm_name', 'isGroupMember');
+            ga.addParam('sysparm_userid', g_user.userID);
+            ga.addParam('sysparm_groupid', item.group);
+
+            ga.getXMLAnswer(function(answer) {
+                if (answer === 'true') {
+                    g_form.setReadOnly('app_ip_addresses', item.ipReadOnly);
+                    g_form.setReadOnly('app_host_name', item.hostReadOnly);
+                }
+            });
+        }
+    });
+}
+
+DB Server Field Lock
+
+function onLoad() {
+
+    var assignmentGroup = parent.g_form.getValue('assignment_group');
+    var shortDesc = parent.g_form.getValue('short_description').toString();
+
+    var config = [
+        {
+            group: "e63d5e85b1611110964668d72675c6f8", // Unisys Windows
+            keyword: "Provide Server Names for Windows Database Server(s)",
+            ipReadOnly: true,
+            hostReadOnly: false
+        },
+        {
+            group: "ee52a2c9b1611110964668d72675c6eb", // Unisys Linux
+            keyword: "Provide Server Names for Linux Database Server(s)",
+            ipReadOnly: true,
+            hostReadOnly: false
+        },
+        {
+            group: "78ce663a715d71509646957b274c67ab", // EB IT Engineering
+            keyword: "Provide IP addresses for database server(s)",
+            ipReadOnly: false,
+            hostReadOnly: true
+        }
+    ];
+
+    config.forEach(function(item) {
+        if (assignmentGroup === item.group && shortDesc.includes(item.keyword)) {
+
+            var ga = new GlideAjax('checkIfGroupMember');
+            ga.addParam('sysparm_name', 'isGroupMember');
+            ga.addParam('sysparm_userid', g_user.userID);
+            ga.addParam('sysparm_groupid', item.group);
+
+            ga.getXMLAnswer(function(answer) {
+                if (answer === 'true') {
+                    g_form.setReadOnly('db_ip_addresses', item.ipReadOnly);
+                    g_form.setReadOnly('db_host_name', item.hostReadOnly);
+                }
+            });
+        }
+    });
+}
