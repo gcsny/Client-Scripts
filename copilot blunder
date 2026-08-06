@@ -404,3 +404,29 @@ function onLoad() {
         }
     });
 }
+
+NEW VARIABLE SET SCRIPT
+
+function onLoad() {
+    var assignmentGroup = parent.g_form.getValue('assignment_group');
+    var shortDesc = parent.g_form.getValue('short_description').toString();
+
+    var unisysWindows = "e63d5e85b1611110964668d72675c6f8";
+    var ebItEngineering = "78ce663a715d71509646957b274c67ab";
+
+    if (assignmentGroup === unisysWindows &&
+        shortDesc.includes("Provide Server Names for Windows Database Server(s)")) {
+
+        var ga = new GlideAjax('checkIfGroupMember');
+        ga.addParam('sysparm_name', 'isGroupMember');
+        ga.addParam('sysparm_userid', g_user.userID);
+        ga.addParam('sysparm_groupid', unisysWindows);
+
+        ga.getXMLAnswer(function(answer) {
+            if (answer === 'true') {
+                g_form.setReadOnly('db_ip_addresses', true);
+                g_form.setReadOnly('db_host_name', false);
+            }
+        });
+    }
+}
